@@ -2,12 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django_mysql.models import JSONField, Model
+#from django_mysql.models import JSONField, Model
+from django.contrib.postgres.fields import JSONField
 
 def default_coursePlan():
 	return { "Fall 2018": [], "Spring 2019" : [] }
 
-class Profile(Model):
+class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
 	challenge = models.PositiveSmallIntegerField(default=4)
 	hrsPerWeek = models.PositiveSmallIntegerField(default=24)
