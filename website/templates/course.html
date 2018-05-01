@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+{% csrf_token %}
+{% block content %}
+  <div class="container-fluid text-center">    
+    <div class="row content">
+
+      <div class="col-sm-6 text-left"> 
+        <h1>Your Course Plan</h1>
+          <div class="slidecontainer" style="float: right; padding-left: 15px">
+            <input type="range" min="1" max="36" value="{{ user.profile.challenge }}" class="slider" id="challenge_slider" onchange="updateParameters()">
+            <p>Challenge: <span id="challenge_value"></span></p>
+          </div>
+          <div class="slidecontainer" style="float: right">
+            <input type="range" min="1" max="120" value="{{ user.profile.hrsPerWeek }}" class="slider" id="hrsPerWeek_slider" onchange="updateParameters()">
+            <p>Hours Per Week: <span id="hrsPerWeek_value"></span></p>
+          </div>
+          <h2>Fall 2018</h2>
+          <button onclick="addClass2018(event)" class="btn-success" id="fall-2018_add">Add Class</button>
+          <button onclick="removeClass2018(event)" class="btn-success" id="fall-2018_remove">Remove Class</button>
+          <div style="border: 3px black double;">
+            {% render_table fall_2018 %}
+          </div>
+          <p class="totalValue">Challenge: <span id="fall_2018_challenge_value"></span>, HrsPerWeek: <span id="fall_2018_hrsPerWeek_value"></span></p>
+
+          <h2>Spring 2019</h2>
+          <button onclick="addClass2019(event)" class="btn-success" id="spring-2019_add">Add Class</button>
+          <button onclick="removeClass2019(event)" class="btn-success" id="spring-2019_remove">Remove Class</button>
+          <div style="border: 3px black double;">
+            {% render_table spring_2019 %}
+          </div>
+          <p class="totalValue">Challenge: <span id="spring_2019_challenge_value"></span>, HrsPerWeek: <span id="spring_2019_hrsPerWeek_value"></span></p>
+
+      </div>
+      <div class="col-sm-6 sidenav">
+        <div class="dropdown">
+          <button onclick="showDropdown()" class="dropbtn">Choose Subject</button>
+          <div id ="subjectDropdown" class="dropdown-content">
+            {% for s in subject %}
+              <option value="{{s.subject}}" onclick="filterSubjects(event)">{{s.subject}}</option>
+            {% endfor %}
+          </div>
+        </div>
+        <div id="redips-drag" style="height: 750px;width: 750px;overflow: auto;">
+          {% render_table course %}
+        </div>
+      </div>
+    </div>
+    </div>
+
+{% endblock %}
+
+{% block javascript %}
+  <script>
+    var challenge_slider = document.getElementById("challenge_slider");
+    var challenge_output = document.getElementById("challenge_value");
+    challenge_output.innerHTML = challenge_slider.value;
+
+    challenge_slider.oninput = function() {
+      challenge_output.innerHTML = this.value;
+    }
+
+    var hrsPerWeek_slider = document.getElementById("hrsPerWeek_slider");
+    var hrsPerWeek_output = document.getElementById("hrsPerWeek_value");
+    hrsPerWeek_output.innerHTML = hrsPerWeek_slider.value;
+
+    hrsPerWeek_slider.oninput = function() {
+      hrsPerWeek_output.innerHTML = this.value;
+    }
+
+    function updateColors() {
+      var challenge = document.getElementById("challenge_slider").value;
+      var hrsPerWeek = document.getElementById("hrsPerWeek_slider").value;
+      var fall_2018_challenge_value = document.getElementById("fall_2018_challenge_value").innerHTML;
+      var fall_2018_hrsPerWeek_value = document.getElementById("fall_2018_hrsPerWeek_value").innerHTML;
+      var spring_2019_challenge_value = document.getElementById("spring_2019_challenge_value").innerHTML;
+      var spring_2019_hrsPerWeek_value = document.getElementById("spring_2019_hrsPerWeek_value").innerHTML;
+      console.log(fall_2018_challenge_value, fall_2018_hrsPerWeek_value, spring_2019_challenge_value, spring_2019_hrsPerWeek_value)
+      if (fall_2018_challenge_value >= challenge) {
+        $('#fall_2018_challenge_value').css('color', 'red');
+      }
+      else if (fall_2018_challenge_value < challenge) {
+        $('#fall_2018_challenge_value').css('color', 'black');
+      }
+
+      if (fall_2018_hrsPerWeek_value >= hrsPerWeek) {
+        $('#fall_2018_hrsPerWeek_value').css('color', 'red');
+      }
+      else if (fall_2018_hrsPerWeek_value < hrsPerWeek) {
+        $('#fall_2018_hrsPerWeek_value').css('color', 'black');
+      }
+
+      if (spring_2019_challenge_value >= challenge) {
+        $('#spring_2019_challenge_value').css('color', 'red');
+      }
+      else if (spring_2019_challenge_value < challenge) {
+        $('#spring_2019_challenge_value').css('color', 'black');
+      }
+
+      if (spring_2019_hrsPerWeek_value >= hrsPerWeek) {
+        $('#spring_2019_hrsPerWeek_value').css('color', 'red');
+      }
+      else if (spring_2019_hrsPerWeek_value < hrsPerWeek) {
+        $('#spring_2019_hrsPerWeek_value').css('color', 'black');
+      }
+    };
+
+    function updateParameters() {
+      var challenge = document.getElementById("challenge_slider").value;
+      var hrsPerWeek = document.getElementById("hrsPerWeek_slider").value;
+      updateColors()
+
+      var selected_classes = document.getElementsByClassName("registered");
+      var coursePlan = { "Fall 2018": [], "Spring 2019" : [] }
+      var tbl_fall_2018 = $('table#fall-2018 tr').get().map(function(row) {
+        return $(row).find('td').get().map(function(cell) {
+          return $(cell).html();
+        });
+      });
+      console.log(challenge, hrsPerWeek);
+      //console.log(coursePlan["Fall 2018"])
+      var i;
+      var fall_2018 = []
+      for (i=1; i<tbl_fall_2018.length;i++) {
+        //console.log(tbl[i][0], tbl[i][2]);
+        fall_2018.push([tbl_fall_2018[i][0], tbl_fall_2018[i][1]]);
+        //console.log(fall);
+      };
+
+      var tbl_spring_2019 = $('table#spring-2019 tr').get().map(function(row) {
+        return $(row).find('td').get().map(function(cell) {
+          return $(cell).html();
+        });
+      });
+      console.log(challenge, hrsPerWeek);
+      //console.log(coursePlan["Fall 2018"])
+      var i;
+      var spring_2019 = []
+      for (i=1; i<tbl_spring_2019.length;i++) {
+        //console.log(tbl[i][0], tbl[i][2]);
+        spring_2019.push([tbl_spring_2019[i][0], tbl_spring_2019[i][1]]);
+        //console.log(fall);
+      };
+
+
+
+      coursePlan["Fall 2018"] = fall_2018
+      coursePlan["Spring 2019"] = spring_2019
+      coursePlan = JSON.stringify(coursePlan)
+      console.log(coursePlan)
+      
+      
+
+      $.ajax({
+        url: '/ajax/get_parameters/',
+        type: 'post',
+        data: {
+          'challenge': challenge, 'hrsPerWeek': hrsPerWeek,
+          'coursePlan' : coursePlan,
+          csrfmiddlewaretoken: '{{csrf_token}}'
+        },
+        dataType: 'json',
+        success: function(data) {
+
+        }
+      });
+    };
+
+    /* When the user clicks on the button, 
+    toggle between hiding and showing the dropdown content */
+    function showDropdown() {
+        document.getElementById("subjectDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown menu if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+
+    function filterSubjects(event) {
+      var input = $(event.target).text();
+      var table = document.getElementById("courseTable");
+      var tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByClassName("subject");
+        if (td.item(0).textContent == input){
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+        }
+      
+    };
+
+    function addClass2018(event) {
+
+      var row = document.getElementsByClassName("selected")[0];
+      row.classList.remove("selected")
+      row.classList.add("fall-2018")
+      console.log(row)
+      $('#fall-2018 > tbody:last-child').append(row);
+      updateTableSums();
+      updateParameters();
+
+    };
+
+    function addClass2019(event) {
+      var row = document.getElementsByClassName("selected")[0];
+      row.classList.remove("selected")
+      row.classList.add("spring-2019")
+      console.log(row)
+      $('#spring-2019 > tbody:last-child').append(row);
+      updateTableSums();
+      updateParameters();
+
+    };
+
+    function removeClass2018(event) {
+
+      var row = document.getElementsByClassName("selected")[0];
+      row.classList.remove("selected")
+      row.classList.remove("fall-2018")
+      console.log(row)
+      $('#courseTable > tbody:last-child').append(row);
+      updateTableSums();
+      updateParameters();
+
+    };
+
+    function removeClass2019(event) {
+      var row = document.getElementsByClassName("selected")[0];
+      row.classList.remove("selected")
+      row.classList.remove("spring-2019")
+      console.log(row)
+      $('#courseTable > tbody:last-child').append(row);
+      updateTableSums();
+      updateParameters();
+
+    };
+
+    $(document).ready(function(){   
+
+        //the following script is to change the table row bg color when clicked
+        $('tr').click(function(){
+        $('tr td').css({ 'background' : 'none'});
+        $('tr').removeClass("selected");
+        $('td', this).css({ 'background-color' : '#CCC' });
+        $(this).addClass("selected");
+        console.log($('td', this)[0])
+      }); 
+
+        //the following script is for the table row hover effect
+        $('tr').hover(function() {
+                $(this).css('background-color', '#FFFF99');
+            },
+            function() {
+                $(this).css('background-color', '#FFFFFF');
+                $(this).contents('td').css('border', 'none');
+            });
+
+
+    }); 
+
+    function updateTableSums() {
+      var challenge_sum = 0
+      var hrsPerWeek_sum = 0
+      $("tr.fall-2018 > td.challenge").each(function() {
+          console.log($(this).text());
+          var value = $(this).text();
+          // add only if the value is number
+          if(!isNaN(value) && value.length != 0) {
+              challenge_sum += parseFloat(value);
+          }
+      });
+
+      var fall_2018_challenge_value = document.getElementById("fall_2018_challenge_value");
+      fall_2018_challenge_value.innerHTML = challenge_sum.toFixed(2);
+
+      $("tr.fall-2018 > td.hoursperwkinclclass").each(function() {
+          console.log($(this).text());
+          var value = $(this).text();
+          // add only if the value is number
+          if(!isNaN(value) && value.length != 0) {
+              hrsPerWeek_sum += parseFloat(value);
+          }
+      });
+
+      var fall_2018_hrsPerWeek_value = document.getElementById("fall_2018_hrsPerWeek_value");
+      fall_2018_hrsPerWeek_value.innerHTML = hrsPerWeek_sum.toFixed(2);
+
+      challenge_sum = 0
+      hrsPerWeek_sum = 0
+
+      $("tr.spring-2019 > td.challenge").each(function() {
+          console.log($(this).text());
+          var value = $(this).text();
+          // add only if the value is number
+          if(!isNaN(value) && value.length != 0) {
+              challenge_sum += parseFloat(value);
+          }
+      });
+
+      var spring_2019_challenge_value = document.getElementById("spring_2019_challenge_value");
+      spring_2019_challenge_value.innerHTML = challenge_sum.toFixed(2);
+
+      $("tr.spring-2019 > td.hoursperwkinclclass").each(function() {
+          console.log($(this).text());
+          var value = $(this).text();
+          // add only if the value is number
+          if(!isNaN(value) && value.length != 0) {
+              hrsPerWeek_sum += parseFloat(value);
+          }
+      });
+
+      var spring_2019_hrsPerWeek_value = document.getElementById("spring_2019_hrsPerWeek_value");
+      spring_2019_hrsPerWeek_value.innerHTML = hrsPerWeek_sum.toFixed(2);
+    };
+
+    $(document).ready(updateTableSums());
+    $(document).ready(updateColors());
+
+
+
+
+  </script>
+{% endblock %}
