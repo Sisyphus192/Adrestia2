@@ -12,7 +12,7 @@ class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
 	challenge = models.PositiveSmallIntegerField(default=4)
 	hrsPerWeek = models.PositiveSmallIntegerField(default=24)
-	coursePlan = JSONField()#default = default_coursePlan)
+	coursePlan = JSONField(default = default_coursePlan)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
