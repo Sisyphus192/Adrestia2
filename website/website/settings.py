@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'website.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 # This is the database to use on heroku
-#DATABASES = { 'default': dj_database_url.config() }
+DATABASES = { 'default': dj_database_url.config() }
 
 # These are the database settings for running locally
 """ 
