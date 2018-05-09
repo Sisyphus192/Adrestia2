@@ -76,38 +76,38 @@
       var spring_2019_challenge_value = document.getElementById("spring_2019_challenge_value").innerHTML;
       var spring_2019_hrsPerWeek_value = document.getElementById("spring_2019_hrsPerWeek_value").innerHTML;
       //console.log(fall_2018_challenge_value, fall_2018_hrsPerWeek_value, spring_2019_challenge_value, spring_2019_hrsPerWeek_value)
-      if (fall_2018_challenge_value >= challenge) {
+      if (Number(fall_2018_challenge_value) >= Number(challenge)) {
         console.log(fall_2018_challenge_value, challenge, 'greater than')
         $('#fall_2018_challenge_value').css('color', 'red');
       }
-      else if (fall_2018_challenge_value < challenge) {
+      else if (Number(fall_2018_challenge_value) < Number(challenge)) {
         console.log(fall_2018_challenge_value, challenge, 'less than')
         $('#fall_2018_challenge_value').css('color', 'black');
       }
 
-      if (fall_2018_hrsPerWeek_value >= hrsPerWeek) {
+      if (Number(fall_2018_hrsPerWeek_value) >= Number(hrsPerWeek)) {
         console.log(fall_2018_hrsPerWeek_value, hrsPerWeek, 'greater than')
         $('#fall_2018_hrsPerWeek_value').css('color', 'red');
       }
-      else if (fall_2018_hrsPerWeek_value < hrsPerWeek) {
+      else if (Number(fall_2018_hrsPerWeek_value) < Number(hrsPerWeek)) {
         console.log(fall_2018_hrsPerWeek_value, hrsPerWeek, 'less than')
         $('#fall_2018_hrsPerWeek_value').css('color', 'black');
       }
 
-      if (spring_2019_challenge_value >= challenge) {
+      if (Number(spring_2019_challenge_value) >= Number(challenge)) {
         console.log(spring_2019_challenge_value, challenge, 'greater than')
         $('#spring_2019_challenge_value').css('color', 'red');
       }
-      else if (spring_2019_challenge_value < challenge) {
+      else if (Number(spring_2019_challenge_value) < Number(challenge)) {
         console.log(spring_2019_challenge_value, challenge, 'less than')
         $('#spring_2019_challenge_value').css('color', 'black');
       }
 
-      if (spring_2019_hrsPerWeek_value >= hrsPerWeek) {
+      if (Number(spring_2019_hrsPerWeek_value) >= Number(hrsPerWeek)) {
         console.log(spring_2019_hrsPerWeek_value, hrsPerWeek, 'greater than')
         $('#spring_2019_hrsPerWeek_value').css('color', 'red');
       }
-      else if (spring_2019_hrsPerWeek_value < hrsPerWeek) {
+      else if (Number(spring_2019_hrsPerWeek_value) < Number(hrsPerWeek)) {
         console.log(spring_2019_hrsPerWeek_value, hrsPerWeek, 'less than')
         $('#spring_2019_hrsPerWeek_value').css('color', 'black');
       }
