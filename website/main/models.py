@@ -8,7 +8,7 @@ from django.contrib.postgres.fields import JSONField
 def default_coursePlan():
 	return { "Fall 2018": [], "Spring 2019" : [] }
 
-class Profile(Model):
+class Profile(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
 	challenge = models.PositiveSmallIntegerField(default=4)
 	hrsPerWeek = models.PositiveSmallIntegerField(default=24)
