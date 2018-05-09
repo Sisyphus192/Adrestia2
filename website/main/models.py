@@ -2,8 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django_mysql.models import JSONField, Model
-#from django.contrib.postgres.fields import JSONField
+#from django_mysql.models import JSONField, Model
+from django.contrib.postgres.fields import JSONField
 
 def default_coursePlan():
 	return { "Fall 2018": [], "Spring 2019" : [] }

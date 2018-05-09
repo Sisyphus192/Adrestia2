@@ -36,11 +36,6 @@ def CourseView(request):
     table = CourseTable(Courses.objects.all())
     subject = Courses.objects.values("subject").distinct()
     
-    if request.method == "POST":
-        request.method == ''
-        print("HELLOOOOOOOO", file=sys.stderr)
-    #    p = optimize()
-    #else:
     p = list(Profile.objects.values_list('coursePlan', flat=True))[0]
     print(p, file=sys.stderr)
     objs = Courses.objects.none()    
